@@ -19,7 +19,7 @@ public class User {
     private String phoneNumber;
     private String email;
     private Gender gender;
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private Set<RentAdvertisement> advertisements;
 
     public User(){

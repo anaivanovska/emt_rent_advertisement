@@ -2,8 +2,6 @@ package mk.com.ukim.finki.rent_advertisement.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
