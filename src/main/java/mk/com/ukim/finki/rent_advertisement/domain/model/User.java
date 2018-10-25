@@ -19,6 +19,8 @@ public class User {
     private String phoneNumber;
     private String email;
     private Gender gender;
+    private Role role;
+    private Boolean active;
     @OneToMany(mappedBy = "user")
     private Set<RentAdvertisement> advertisements;
 

@@ -5,7 +5,9 @@ import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.UserRegistrationDTO;
 
 public interface UserService {
-    public UserDTO createUser(UserRegistrationDTO userRegistrationDTO);
-    public UserDTO updateUser(UserDTO userDTO);
-    public void changeUserPassword(PasswordDTO passwordDTO);
+     UserDTO createUser(UserRegistrationDTO userRegistrationDTO);
+     UserDTO updateUser(UserDTO userDTO);
+     void changeUserPassword(PasswordDTO passwordDTO);
+     UserDTO getUser(String username);
+
 }
