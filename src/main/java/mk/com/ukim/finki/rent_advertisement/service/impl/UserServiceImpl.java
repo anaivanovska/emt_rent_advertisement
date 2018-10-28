@@ -4,7 +4,6 @@ import mk.com.ukim.finki.rent_advertisement.domain.dto.PasswordDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.UserRegistrationDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.exceptions.RentAdvertisementException;
-import mk.com.ukim.finki.rent_advertisement.domain.model.RentAdvertisement;
 import mk.com.ukim.finki.rent_advertisement.domain.model.Role;
 import mk.com.ukim.finki.rent_advertisement.domain.model.User;
 import mk.com.ukim.finki.rent_advertisement.persistence.UserRepository;
@@ -31,6 +30,7 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(userRegistrationDTO, User.class);
         user.setRole(Role.ADVERTISER);
         user.setActive(false);
+        user.setPassword(passwordEncoder.encode(userRegistrationDTO.getPassword()));
         user = userRepository.save(user);
         UserDTO result = modelMapper.map(user, UserDTO.class);
         return result;
