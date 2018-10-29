@@ -15,11 +15,12 @@ public class RentAdvertisement {
     private Long id;
     private String title;
     private String description;
-    private LocalDateTime advertisementShareDate;
+    private LocalDateTime creationDate;
+    private AdvertisementStatus status;
     @ManyToOne
     private User user;
-    @OneToOne
-    private Location location;
+    @ManyToOne
+    private Location storageLocation;
 
     public RentAdvertisement(){
 

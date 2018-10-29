@@ -1,19 +1,26 @@
 package mk.com.ukim.finki.rent_advertisement.domain.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 
 @Entity
 @Table(name = "locations")
+@Getter
+@Setter
 public class Location {
     @Id
     private Long id;
     private BigDecimal longitude;
     private BigDecimal latitude;
-    @OneToOne(mappedBy = "location")
-    private RentAdvertisement advertisement;
+    @OneToMany(mappedBy = "storageLocation")
+    private Set<RentAdvertisement> advertisement;
+
+    public Location(){
+
+    }
 }
