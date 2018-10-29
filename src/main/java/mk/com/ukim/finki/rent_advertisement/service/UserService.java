@@ -9,6 +9,6 @@ public interface UserService {
      UserDTO updateUser(UserDTO userDTO);
      void changeUserPassword(PasswordDTO passwordDTO);
      UserDTO getUser(String username);
-
+     String resetPassword(String username);
 
 }

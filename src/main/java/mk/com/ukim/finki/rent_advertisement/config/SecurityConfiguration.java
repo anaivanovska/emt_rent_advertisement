@@ -1,6 +1,8 @@
 package mk.com.ukim.finki.rent_advertisement.config;
 
 
+import mk.com.ukim.finki.rent_advertisement.domain.Constants.Constants;
+import mk.com.ukim.finki.rent_advertisement.domain.Constants.SecurityConstants;
 import mk.com.ukim.finki.rent_advertisement.security.JwtAuthenticationFilter;
 import mk.com.ukim.finki.rent_advertisement.security.JwtAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -30,8 +36,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "login").permitAll()
-                .antMatchers("/api/user/register").permitAll()
+        http.cors()
+                .and()
+                .csrf()
+                .disable()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll()
+                .antMatchers("/api/user/register", "/api/user/forgotPassword?**").permitAll()
                 .antMatchers("/api/user/get/**", "/api/user/update", "/api/user/changePassword")
                 .hasAnyRole("ADMIN", "ADVERTISER")
                 .and()
@@ -58,4 +68,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+   /* @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(SecurityConstants.ALLOWED_ORIGINS));
+        configuration.setAllowedMethods(Arrays.asList(SecurityConstants.ALLOWED_METHODS));
+        configuration.setAllowedHeaders(Arrays.asList(SecurityConstants.ALLOWED_HEADERS));
+        configuration.setExposedHeaders(Arrays.asList(SecurityConstants.EXPOSED_HEADERS));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("**", configuration);
+        return source;
+    }*/
 }
