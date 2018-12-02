@@ -1,13 +1,12 @@
 package mk.com.ukim.finki.rent_advertisement.init;
 
-import mk.com.ukim.finki.rent_advertisement.domain.model.Role;
 import mk.com.ukim.finki.rent_advertisement.domain.model.User;
 import mk.com.ukim.finki.rent_advertisement.persistence.UserRepository;
+import mk.com.ukim.finki.rent_advertisement.init.Admin;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 
 @Component
@@ -17,20 +16,26 @@ public class InitilizeAdmin {
     private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private Admin admin;
+    @Autowired
+    private ModelMapper modelMapper;
 
-    @Value("${admin.username}")
-    private String username;
-    @Value("${admin.password}")
-    private String password;
 
     @PostConstruct
     public void init(){
         if(userRepository.count() == 0 ){
-            User admin = new User();
-            admin.setUsername(username);
-            admin.setPassword(passwordEncoder.encode(password));
-            admin.setRole(Role.ADMIN);
-            userRepository.save(admin);
+            User user = new User();
+            user.setUsername(admin.getUsername());
+            user.setPassword(passwordEncoder.encode(admin.getPassword()));
+            user.setFirstName(admin.getFirstName());
+            user.setLastName(admin.getLastName());
+            user.setGender(admin.getGender());
+            user.setEmail(admin.getEmail());
+            user.setPhoneNumber(admin.getPhoneNumber());
+            user.setRole(admin.getRole());
+            user.setActive(true);
+            userRepository.save(user);
         }
     }
 }

@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name="rent_advertisement")
 @Getter
 @Setter
-public class RentAdvertisement {
+public class StorageRentAd {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -21,8 +22,10 @@ public class RentAdvertisement {
     private User user;
     @ManyToOne
     private Location storageLocation;
+    @OneToMany
+    private Set<Image> images;
 
-    public RentAdvertisement(){
+    public StorageRentAd(){
 
     }
 

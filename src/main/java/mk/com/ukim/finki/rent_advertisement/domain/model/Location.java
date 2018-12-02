@@ -18,7 +18,7 @@ public class Location {
     private BigDecimal longitude;
     private BigDecimal latitude;
     @OneToMany(mappedBy = "storageLocation")
-    private Set<RentAdvertisement> advertisement;
+    private Set<StorageRentAd> storageRentAds;
 
     public Location(){
 

@@ -22,7 +22,7 @@ public class User {
     private Role role;
     private Boolean active;
     @OneToMany(mappedBy = "user")
-    private Set<RentAdvertisement> advertisements;
+    private Set<StorageRentAd> storageRentAds;
 
     public User(){
 

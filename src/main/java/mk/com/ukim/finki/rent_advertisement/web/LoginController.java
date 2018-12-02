@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = SecurityConstants.ALLOWED_ORIGINS, allowedHeaders = SecurityConstants.ALLOWED_HEADERS, exposedHeaders = SecurityConstants.EXPOSED_HEADERS)
 public class LoginController {
 
-    @PostMapping("l6ogin")
+    @PostMapping("login")
     public void loginUser(@RequestBody UserCredentials credentials){
 
     }

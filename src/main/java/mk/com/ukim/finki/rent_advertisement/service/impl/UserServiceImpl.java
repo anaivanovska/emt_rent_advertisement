@@ -4,7 +4,7 @@ import mk.com.ukim.finki.rent_advertisement.domain.Constants.Constants;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.PasswordDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.UserRegistrationDTO;
-import mk.com.ukim.finki.rent_advertisement.domain.exceptions.RentAdvertisementException;
+import mk.com.ukim.finki.rent_advertisement.domain.exceptions.StorageRentAdException;
 import mk.com.ukim.finki.rent_advertisement.domain.model.Role;
 import mk.com.ukim.finki.rent_advertisement.domain.model.User;
 import mk.com.ukim.finki.rent_advertisement.persistence.UserRepository;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO createUser(UserRegistrationDTO userRegistrationDTO) {
         User userInDB = this.userRepository.findById(userRegistrationDTO.getUsername()).orElse(null);
         if(userInDB != null){
-            throw new RentAdvertisementException("User with username: "+ userRegistrationDTO.getUsername() + " already exists.");
+            throw new StorageRentAdException("User with username: "+ userRegistrationDTO.getUsername() + " already exists.");
         }
         User user = modelMapper.map(userRegistrationDTO, User.class);
         user.setRole(Role.ADVERTISER);
@@ -55,11 +55,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(UserDTO userDTO) {
         User user = findUserbyUsername(userDTO.getUsername());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setGender(userDTO.getGender());
+        if(!userDTO.getFirstName().trim().equals("")) {
+            user.setFirstName(userDTO.getFirstName());
+        }
+        if(!userDTO.getLastName().trim().equals("")) {
+            user.setLastName(userDTO.getLastName());
+        }
+        if(!userDTO.getEmail().trim().equals("")) {
+            user.setEmail(userDTO.getEmail());
+        }
+        if(!userDTO.getPhoneNumber().trim().equals("")) {
+            user.setPhoneNumber(userDTO.getPhoneNumber());
+        }
+        if(!userDTO.getGender().toString().trim().equals("")) {
+            user.setGender(userDTO.getGender());
+        }
         user = userRepository.save(user);
         UserDTO resultDTO = modelMapper.map(user, UserDTO.class);
         return resultDTO;
@@ -70,7 +80,7 @@ public class UserServiceImpl implements UserService {
     public void changeUserPassword(PasswordDTO passwordDTO) {
         User user = findUserbyUsername(passwordDTO.getUsername());
         if(!passwordEncoder.matches(passwordDTO.getPassword(), user.getPassword())){
-            throw new RentAdvertisementException("Wrong password");
+            throw new StorageRentAdException("Wrong password");
         }
 
         user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
@@ -87,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
     private User findUserbyUsername(String username){
         User user = userRepository.findById(username)
-                .orElseThrow(() -> new RentAdvertisementException("User - " + username + " not found"));
+                .orElseThrow(() -> new StorageRentAdException("User - " + username + " not found"));
         return user;
     }
 

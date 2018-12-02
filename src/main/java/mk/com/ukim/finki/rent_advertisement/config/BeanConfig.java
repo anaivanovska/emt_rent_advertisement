@@ -1,13 +1,12 @@
 package mk.com.ukim.finki.rent_advertisement.config;
 
+import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.model.Location;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
+import mk.com.ukim.finki.rent_advertisement.domain.model.User;
+import org.modelmapper.*;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +25,6 @@ public class BeanConfig {
             }
         });
 
-       return modelMapper;
+        return modelMapper;
     }
 }
