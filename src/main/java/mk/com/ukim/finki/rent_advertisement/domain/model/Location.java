@@ -14,8 +14,11 @@ import java.util.Set;
 @Setter
 public class Location {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(scale = 8)
     private BigDecimal longitude;
+    @Column(scale = 8)
     private BigDecimal latitude;
     @OneToMany(mappedBy = "storageLocation")
     private Set<StorageRentAd> storageRentAds;

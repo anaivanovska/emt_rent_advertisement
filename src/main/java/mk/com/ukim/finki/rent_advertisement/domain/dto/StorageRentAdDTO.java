@@ -9,6 +9,7 @@ import java.util.Set;
 @Getter
 @Setter
 public class StorageRentAdDTO {
+    private long id;
     private String title;
     private String description;
     private String creationDate;

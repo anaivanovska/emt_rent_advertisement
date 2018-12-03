@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ImageDTO {
+    private long id;
     private String title;
-    private String description;
     private byte[] image;
 
     public ImageDTO(){

@@ -45,6 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers("/api/user/register", "/api/user/forgotPassword?**").permitAll()
                 .antMatchers("/api/user/get/**", "/api/user/update", "/api/user/changePassword")
                 .hasAnyRole("ADMIN", "ADVERTISER")
+                .antMatchers("/api/storageRentAd/**")
+                .hasAnyRole("ADMIN", "ADVERTISER")
                 .and()
                 .addFilter(new JwtAuthorizationFilter(authenticationManagerBean()))
                 .addFilter(new JwtAuthenticationFilter(authenticationManagerBean())).exceptionHandling()

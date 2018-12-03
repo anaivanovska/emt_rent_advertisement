@@ -14,7 +14,6 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String title;
-    private String description;
     @Lob
     private byte[] image;
     @ManyToOne

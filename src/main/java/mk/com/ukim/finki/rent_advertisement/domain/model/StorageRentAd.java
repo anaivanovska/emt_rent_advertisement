@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name="rent_advertisement")
+@Table(name="storage_rent_ads")
 @Getter
 @Setter
 public class StorageRentAd {
