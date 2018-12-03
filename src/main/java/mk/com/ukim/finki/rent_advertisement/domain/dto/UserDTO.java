@@ -6,6 +6,7 @@ import mk.com.ukim.finki.rent_advertisement.domain.model.Gender;
 import mk.com.ukim.finki.rent_advertisement.domain.model.StorageRentAd;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -17,7 +18,7 @@ public class UserDTO implements Serializable{
     private String phoneNumber;
     private String email;
     private Gender gender;
-    private Set<StorageRentAd> storageRentAds;
+    private List<StorageRentAd> storageRentAds;
 
     public UserDTO(){
 

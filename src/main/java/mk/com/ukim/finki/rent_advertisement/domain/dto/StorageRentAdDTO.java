@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import mk.com.ukim.finki.rent_advertisement.domain.model.AdvertisementStatus;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +15,7 @@ public class StorageRentAdDTO {
     private String creationDate;
     private AdvertisementStatus status;
     private LocationDTO storageLocation;
-    private Set<ImageDTO> images;
+    private List<ImageDTO> images;
 
     public StorageRentAdDTO() {
 

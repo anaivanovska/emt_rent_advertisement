@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -22,7 +22,7 @@ public class User {
     private Role role;
     private Boolean active;
     @OneToMany(mappedBy = "user")
-    private Set<StorageRentAd> storageRentAds;
+    private List<StorageRentAd> storageRentAds;
 
     public User(){
 

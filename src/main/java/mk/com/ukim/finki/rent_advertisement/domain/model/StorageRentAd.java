@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name="storage_rent_ads")
@@ -23,7 +23,7 @@ public class StorageRentAd {
     @ManyToOne
     private Location storageLocation;
     @OneToMany
-    private Set<Image> images;
+    private List<Image> images;
 
     public StorageRentAd(){
 

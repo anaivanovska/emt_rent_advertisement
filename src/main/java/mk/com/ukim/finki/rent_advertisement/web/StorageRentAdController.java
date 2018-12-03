@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/storageRentAd")
@@ -16,7 +16,7 @@ public class StorageRentAdController {
     private StorageRentAdServiceImpl storageRentAdService;
 
     @GetMapping("/all/{username}")
-    public Set<StorageRentAdDTO> getAllStorageRentAds(@PathVariable(name = "username") String username){
+    public List<StorageRentAdDTO> getAllStorageRentAds(@PathVariable(name = "username") String username){
         return storageRentAdService.findStorageRentAds(username);
     }
 
