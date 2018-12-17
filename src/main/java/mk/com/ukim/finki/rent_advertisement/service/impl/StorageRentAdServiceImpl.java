@@ -1,7 +1,9 @@
 package mk.com.ukim.finki.rent_advertisement.service.impl;
 
 import mk.com.ukim.finki.rent_advertisement.domain.dto.ImageDTO;
-import mk.com.ukim.finki.rent_advertisement.domain.dto.StorageRentAdDTO;
+import mk.com.ukim.finki.rent_advertisement.domain.dto.StorageRentAdFullDTO;
+import mk.com.ukim.finki.rent_advertisement.domain.dto.StorageRentAdShortDTO;
+import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.exceptions.StorageRentAdException;
 import mk.com.ukim.finki.rent_advertisement.domain.model.*;
 import mk.com.ukim.finki.rent_advertisement.persistence.ImageRepository;
@@ -10,17 +12,18 @@ import mk.com.ukim.finki.rent_advertisement.persistence.StorageRentAdRepository;
 import mk.com.ukim.finki.rent_advertisement.persistence.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import mk.com.ukim.finki.rent_advertisement.service.StorageRentAdService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
 
 @Service
 public class StorageRentAdServiceImpl implements StorageRentAdService {
@@ -39,25 +42,27 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<StorageRentAdDTO> findStorageRentAds(String username) {
-        List<StorageRentAd> storageRentAds = storageRentAdRepository.findAllByUser_Username(username);
-        List<StorageRentAdDTO> storageRentAdDTOS = storageRentAds.stream().map(ad -> modelMapper.map(ad, StorageRentAdDTO.class))
-                                                                         .collect(Collectors.toList());
+    public Page<StorageRentAdShortDTO> findStorageRentAds(String username, Pageable pageable) {
+        Page<StorageRentAd> storageRentAds = storageRentAdRepository.findAllByPublisher_Username(username, pageable);
+        Page<StorageRentAdShortDTO> storageRentAdDTOS = storageRentAds.map(ad -> {
+            System.out.println("Size: " + ad.getImages().size());
+            return modelMapper.map(ad, StorageRentAdShortDTO.class);
+        });
         return storageRentAdDTOS;
     }
 
     @Transactional
     @Override
-    public StorageRentAdDTO createStorageRentAd(StorageRentAdDTO storageRentAdDTO, String username) {
-        StorageRentAd storageRentAd = modelMapper.map(storageRentAdDTO, StorageRentAd.class);
+    public StorageRentAdShortDTO createStorageRentAd(StorageRentAdShortDTO storageRentAdShortDTO, String username) {
+        StorageRentAd storageRentAd = modelMapper.map(storageRentAdShortDTO, StorageRentAd.class);
         User user = userRepository.findById(username).orElse(null);
         Location storageLocation = storageRentAd.getStorageLocation() != null ? findStorageLocation(storageRentAd.getStorageLocation()) : null;
-        storageRentAd.setUser(user);
+        storageRentAd.setPublisher(user);
         storageRentAd.setStorageLocation(storageLocation);
         storageRentAd.setStatus(AdvertisementStatus.Open);
         storageRentAd.setCreationDate(LocalDateTime.now());
         storageRentAd = storageRentAdRepository.save(storageRentAd);
-        StorageRentAdDTO result = modelMapper.map(storageRentAd, StorageRentAdDTO.class);
+        StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
         return result;
     }
 
@@ -76,12 +81,12 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
     }
     @Transactional
     @Override
-    public StorageRentAdDTO updateStorageRentAd(StorageRentAdDTO storageRentAdDTO) {
-        StorageRentAd storageRentAd = this.findStorageRentAdById(storageRentAdDTO.getId());
-        storageRentAd.setTitle(storageRentAdDTO.getTitle());
-        storageRentAd.setDescription(storageRentAdDTO.getDescription());
-        storageRentAd.setStatus(storageRentAdDTO.getStatus());
-        Location storageLocation = modelMapper.map(storageRentAdDTO.getStorageLocation(), Location.class);
+    public StorageRentAdShortDTO updateStorageRentAd(StorageRentAdShortDTO storageRentAdShortDTO) {
+        StorageRentAd storageRentAd = this.findStorageRentAdById(storageRentAdShortDTO.getId());
+        storageRentAd.setTitle(storageRentAdShortDTO.getTitle());
+        storageRentAd.setDescription(storageRentAdShortDTO.getDescription());
+        storageRentAd.setStatus(storageRentAdShortDTO.getStatus());
+        Location storageLocation = modelMapper.map(storageRentAdShortDTO.getStorageLocation(), Location.class);
         if(storageLocation != null){
             storageLocation = this.findStorageLocation(storageLocation);
         }
@@ -89,20 +94,35 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
         storageRentAd = storageRentAdRepository.save(storageRentAd);
         logger.log(Level.INFO, "Storage rent Ad saved in repository, this is its new title "
                 + storageRentAd.getTitle());
-        StorageRentAdDTO result = modelMapper.map(storageRentAd, StorageRentAdDTO.class);
+        StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
         result.setImages(findAllImages(result.getId()));
         return result;
     }
 
     @Transactional
     @Override
-    public StorageRentAdDTO resetStorageRentAd_Date(long id) {
+    public StorageRentAdShortDTO resetStorageRentAd_Date(long id) {
         StorageRentAd storageRentAd = this.findStorageRentAdById(id);
         storageRentAd.setCreationDate(LocalDateTime.now());
         storageRentAd = storageRentAdRepository.save(storageRentAd);
-        StorageRentAdDTO result = modelMapper.map(storageRentAd, StorageRentAdDTO.class);
+        StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
         result.setImages(findAllImages(result.getId()));
         return result;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public StorageRentAdShortDTO getShortStorageRentAd(long id) {
+        StorageRentAd storageRentAd = this.findStorageRentAdById(id);
+        StorageRentAdShortDTO storageRentAdShortDTO = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
+        return storageRentAdShortDTO;
+    }
+
+    @Override
+    public StorageRentAdFullDTO getFullStorageRentAd(long id) {
+        StorageRentAd storageRentAd = this.findStorageRentAdById(id);
+        StorageRentAdFullDTO storageRentAdFullDTO = modelMapper.map(storageRentAd, StorageRentAdFullDTO.class);
+        return storageRentAdFullDTO;
     }
 
     @Transactional
@@ -114,9 +134,10 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
 
     private List<ImageDTO> findAllImages(long rentAd_ID){
         List<Image> images = imageRepository.findAllByStorageRentAd_Id(rentAd_ID);
+        System.out.println("Find all images: " + images.size());
         List<ImageDTO> imageDTOs = images.stream()
-                                        .map(image -> modelMapper.map(image, ImageDTO.class))
-                                        .collect(Collectors.toList());
+                                         .map(image -> modelMapper.map(image, ImageDTO.class))
+                                         .collect(Collectors.toList());
         return imageDTOs;
     }
 }

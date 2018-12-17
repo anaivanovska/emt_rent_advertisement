@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -16,9 +17,9 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(scale = 8)
+    @Digits(integer = 10, fraction = 10)
     private BigDecimal longitude;
-    @Column(scale = 8)
+    @Digits(integer = 10, fraction = 10)
     private BigDecimal latitude;
     @OneToMany(mappedBy = "storageLocation")
     private Set<StorageRentAd> storageRentAds;

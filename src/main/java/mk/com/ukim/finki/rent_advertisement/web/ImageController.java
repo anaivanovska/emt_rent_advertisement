@@ -14,8 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/api/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/api/image")
 public class ImageController {
 
     @Autowired
@@ -24,6 +25,7 @@ public class ImageController {
     @PostMapping("/addAll/{rentAd_ID}")
     public List<ImageDTO> saveImages(@PathVariable long rentAd_ID, @RequestParam("images") MultipartFile[] images) throws IOException {
         if(images.length == 0){
+            System.out.println("Image i null");
             return null;
         }
         List<ImageDTO> imageDTOs = new ArrayList<>();
@@ -41,7 +43,7 @@ public class ImageController {
         return imageService.saveImages(imageDTOs, rentAd_ID);
     }
 
-    @PostMapping("/add/{rentAd_ID}")
+    @PostMapping(value = "/add/{rentAd_ID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ImageDTO saveImage(@PathVariable long rentAd_ID, @RequestParam("image") MultipartFile image) throws IOException {
         ImageDTO imageDTO = new ImageDTO();
         imageDTO.setTitle(image.getOriginalFilename());

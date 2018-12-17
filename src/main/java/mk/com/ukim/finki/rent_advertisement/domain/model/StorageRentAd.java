@@ -19,10 +19,10 @@ public class StorageRentAd {
     private LocalDateTime creationDate;
     private AdvertisementStatus status;
     @ManyToOne
-    private User user;
+    private User publisher;
     @ManyToOne
     private Location storageLocation;
-    @OneToMany
+    @OneToMany(mappedBy = "storageRentAd")
     private List<Image> images;
 
     public StorageRentAd(){

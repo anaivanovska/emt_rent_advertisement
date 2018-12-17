@@ -21,7 +21,7 @@ public class User {
     private Gender gender;
     private Role role;
     private Boolean active;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "publisher")
     private List<StorageRentAd> storageRentAds;
 
     public User(){

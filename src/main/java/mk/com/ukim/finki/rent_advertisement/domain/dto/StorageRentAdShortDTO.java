@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class StorageRentAdDTO {
+public class StorageRentAdShortDTO {
     private long id;
     private String title;
     private String description;
@@ -17,7 +17,7 @@ public class StorageRentAdDTO {
     private LocationDTO storageLocation;
     private List<ImageDTO> images;
 
-    public StorageRentAdDTO() {
+    public StorageRentAdShortDTO() {
 
     }
 }
