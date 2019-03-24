@@ -71,15 +71,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-   /* @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(SecurityConstants.ALLOWED_ORIGINS));
-        configuration.setAllowedMethods(Arrays.asList(SecurityConstants.ALLOWED_METHODS));
-        configuration.setAllowedHeaders(Arrays.asList(SecurityConstants.ALLOWED_HEADERS));
-        configuration.setExposedHeaders(Arrays.asList(SecurityConstants.EXPOSED_HEADERS));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("**", configuration);
-        return source;
-    }*/
+   
 }
