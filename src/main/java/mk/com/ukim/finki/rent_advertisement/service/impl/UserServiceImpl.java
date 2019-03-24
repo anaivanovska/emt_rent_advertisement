@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUser(String username) {
         User user = findUserbyUsername(username);
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        System.out.println("USER ");
         return userDTO;
     }
 

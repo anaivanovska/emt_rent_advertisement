@@ -1,9 +1,7 @@
 package mk.com.ukim.finki.rent_advertisement.service.impl;
 
-import mk.com.ukim.finki.rent_advertisement.domain.dto.ImageDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.StorageRentAdFullDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.dto.StorageRentAdShortDTO;
-import mk.com.ukim.finki.rent_advertisement.domain.dto.UserDTO;
 import mk.com.ukim.finki.rent_advertisement.domain.exceptions.StorageRentAdException;
 import mk.com.ukim.finki.rent_advertisement.domain.model.*;
 import mk.com.ukim.finki.rent_advertisement.persistence.ImageRepository;
@@ -20,9 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -45,7 +41,6 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
     public Page<StorageRentAdShortDTO> findStorageRentAds(String username, Pageable pageable) {
         Page<StorageRentAd> storageRentAds = storageRentAdRepository.findAllByPublisher_Username(username, pageable);
         Page<StorageRentAdShortDTO> storageRentAdDTOS = storageRentAds.map(ad -> {
-            System.out.println("Size: " + ad.getImages().size());
             return modelMapper.map(ad, StorageRentAdShortDTO.class);
         });
         return storageRentAdDTOS;
@@ -55,12 +50,15 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
     @Override
     public StorageRentAdShortDTO createStorageRentAd(StorageRentAdShortDTO storageRentAdShortDTO, String username) {
         StorageRentAd storageRentAd = modelMapper.map(storageRentAdShortDTO, StorageRentAd.class);
-        User user = userRepository.findById(username).orElse(null);
+        User user = userRepository.findById(username).orElseThrow(() ->  new  StorageRentAdException("Publisher with username = "+ username + " not found."));
         Location storageLocation = storageRentAd.getStorageLocation() != null ? findStorageLocation(storageRentAd.getStorageLocation()) : null;
         storageRentAd.setPublisher(user);
         storageRentAd.setStorageLocation(storageLocation);
-        storageRentAd.setStatus(AdvertisementStatus.Open);
         storageRentAd.setCreationDate(LocalDateTime.now());
+        List<Image> images = storageRentAd.getImages();
+        for(Image image : images){
+            image.setStorageRentAd(storageRentAd);
+        }
         storageRentAd = storageRentAdRepository.save(storageRentAd);
         StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
         return result;
@@ -92,10 +90,7 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
         }
         storageRentAd.setStorageLocation(storageLocation);
         storageRentAd = storageRentAdRepository.save(storageRentAd);
-        logger.log(Level.INFO, "Storage rent Ad saved in repository, this is its new title "
-                + storageRentAd.getTitle());
         StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
-        result.setImages(findAllImages(result.getId()));
         return result;
     }
 
@@ -106,7 +101,6 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
         storageRentAd.setCreationDate(LocalDateTime.now());
         storageRentAd = storageRentAdRepository.save(storageRentAd);
         StorageRentAdShortDTO result = modelMapper.map(storageRentAd, StorageRentAdShortDTO.class);
-        result.setImages(findAllImages(result.getId()));
         return result;
     }
 
@@ -132,12 +126,4 @@ public class StorageRentAdServiceImpl implements StorageRentAdService {
         return id;
     }
 
-    private List<ImageDTO> findAllImages(long rentAd_ID){
-        List<Image> images = imageRepository.findAllByStorageRentAd_Id(rentAd_ID);
-        System.out.println("Find all images: " + images.size());
-        List<ImageDTO> imageDTOs = images.stream()
-                                         .map(image -> modelMapper.map(image, ImageDTO.class))
-                                         .collect(Collectors.toList());
-        return imageDTOs;
-    }
 }

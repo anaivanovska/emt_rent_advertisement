@@ -23,32 +23,13 @@ public class ImageController {
     private ImageServiceImpl imageService;
 
     @PostMapping("/addAll/{rentAd_ID}")
-    public List<ImageDTO> saveImages(@PathVariable long rentAd_ID, @RequestParam("images") MultipartFile[] images) throws IOException {
-        if(images.length == 0){
-            System.out.println("Image i null");
-            return null;
-        }
-        List<ImageDTO> imageDTOs = new ArrayList<>();
-        for (MultipartFile image : images) {
-            String imgName = image.getOriginalFilename();
-            byte[] img = image.getBytes();
-            System.out.println("Image: " + imgName);
-
-            ImageDTO imageDTO = new ImageDTO();
-            imageDTO.setTitle(imgName);
-            imageDTO.setImage(img);
-            imageDTOs.add(imageDTO);
-        }
-
-        return imageService.saveImages(imageDTOs, rentAd_ID);
+    public List<ImageDTO> saveImages(@PathVariable long rentAd_ID, @RequestBody List<ImageDTO> images) throws IOException {
+        return imageService.saveImages(images, rentAd_ID);
     }
 
-    @PostMapping(value = "/add/{rentAd_ID}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ImageDTO saveImage(@PathVariable long rentAd_ID, @RequestParam("image") MultipartFile image) throws IOException {
-        ImageDTO imageDTO = new ImageDTO();
-        imageDTO.setTitle(image.getOriginalFilename());
-        imageDTO.setImage(image.getBytes());
-        return imageService.saveImage(imageDTO, rentAd_ID);
+    @PostMapping(value = "/add/{rentAd_ID}")
+    public ImageDTO saveImage(@PathVariable long rentAd_ID, @RequestBody ImageDTO image) throws IOException {
+        return imageService.saveImage(image, rentAd_ID);
     }
 
     @DeleteMapping("/delete/{id}")

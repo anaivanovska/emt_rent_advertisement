@@ -16,8 +16,6 @@ public class UserDTO implements Serializable{
     private String phoneNumber;
     private String email;
     private Gender gender;
-    private List<StorageRentAdShortDTO> storageRentAds;
-
     public UserDTO(){
 
     }

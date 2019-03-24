@@ -1,5 +1,5 @@
 package mk.com.ukim.finki.rent_advertisement.domain.model;
 
-public enum AdvertisementStatus {
+public enum  AdvertisementStatus {
     Open, Closed
 }
