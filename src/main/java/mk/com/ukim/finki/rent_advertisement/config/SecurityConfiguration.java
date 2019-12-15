@@ -5,6 +5,7 @@ import mk.com.ukim.finki.rent_advertisement.domain.Constants.Constants;
 import mk.com.ukim.finki.rent_advertisement.domain.Constants.SecurityConstants;
 import mk.com.ukim.finki.rent_advertisement.security.JwtAuthenticationFilter;
 import mk.com.ukim.finki.rent_advertisement.security.JwtAuthorizationFilter;
+import mk.com.ukim.finki.rent_advertisement.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -30,9 +31,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-    @Qualifier("userDetailsServiceImpl")
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsService;
 
 
     @Override
@@ -71,5 +71,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-   
+
 }
